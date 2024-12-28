@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotes App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="quote-box">
+            <p id="quotes" class="quote">Loading quotes...</p>
+            <p id="author" class="author">- Author</p>
+            <button id="newquotes" class="btn">Get New Quotes</button>
+        </div>
+    </div>
+
+    <script>
+        const quotesElement = document.getElementById("quotes");
+        const authorElement = document.getElementById("author");
+        const newQuotesButton = document.getElementById("newquotes");
+
+        const getNewQuotes = async () => {
+            try {
+                const response = await fetch("/api/quotes");
+                const data = await response.json();
+
+                if (data.quote) {
+                    quotesElement.innerText = data.quote;
+                    authorElement.innerText = data.author ? `- ${data.author}` : "- Unknown";
+                }
+            } catch (error) {
+                quotesElement.innerText = "Failed to load quotes. Please try again.";
+                authorElement.innerText = "";
+            }
+        };
+
+        newQuotesButton.addEventListener("click", getNewQuotes);
+
+        // Load the first quote on page load
+        getNewQuotes();
+    </script>
+</body>
+
+</html>
